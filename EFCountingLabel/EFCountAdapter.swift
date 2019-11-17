@@ -107,35 +107,20 @@ open class EFCountingButton: UIButton, EFCountAdapter {
             return nil
         }
     }
-
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        customInit()
-    }
-
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-
-        customInit()
-    }
-
-    func customInit() {
-        setUpdateBlock { [weak self] (value, _) in
-            guard let self = self else { return }
-            self.setTitle("\(Int(value))", for: UIControl.State.normal)
-        }
-    }
-
+    
     deinit {
         counter.invalidate()
     }
 }
 
-open class EFCountingLabel: UILabel, EFCountAdapter {
+@objc open class EFCountingLabel: UILabel, EFCountAdapter {
     public private(set) var counter = EFCounter()
     
-    open var formatBlock: ((CGFloat) -> String)? {
+    @objc public func countFrom(_ startValue: CGFloat, to endValue: CGFloat, withDuration duration: TimeInterval) {
+        counter.countFrom(startValue, to: endValue, withDuration: duration)
+    }
+    
+    @objc open var formatBlock: ((CGFloat) -> String)? {
         set {
             if let formatBlock = newValue {
                 setUpdateBlock { value, label in label.text = formatBlock(value) }
@@ -172,25 +157,6 @@ open class EFCountingLabel: UILabel, EFCountAdapter {
         @available(*, unavailable)
         get {
             return nil
-        }
-    }
-
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        customInit()
-    }
-
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-
-        customInit()
-    }
-
-    func customInit() {
-        setUpdateBlock { [weak self] (value, _) in
-            guard let self = self else { return }
-            self.text = "\(Int(value))"
         }
     }
     
